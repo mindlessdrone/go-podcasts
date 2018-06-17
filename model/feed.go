@@ -15,6 +15,19 @@ type Feed struct {
 	episodes             []Episode
 }
 
+func NewFeed(title, description, iconURL, feedURL, author string, feedUpdated time.Time) Feed {
+	return Feed{
+		title,
+		description,
+		iconURL,
+		feedURL,
+		author,
+		time.Now(),
+		feedUpdated,
+		make([]Episode, 0),
+	}
+}
+
 // Title: returns title of feed
 func (feed Feed) Title() string {
 	return feed.title
