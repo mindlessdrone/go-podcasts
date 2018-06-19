@@ -43,6 +43,9 @@ type SuccessSaveMock struct {
 }
 
 func (mock *SuccessSaveMock) Add(feed *model.Feed) error {
+	if mock.callCount == nil {
+		mock.callCount = make(map[string]int)
+	}
 	mock.callCount["Add"]++
 	return nil
 }

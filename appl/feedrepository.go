@@ -7,7 +7,6 @@ type FeedRepository interface {
 	QueryAll() ([]model.Feed, error)
 	Add(feed *model.Feed) error
 	Update(id int, feed *model.Feed) error
-	AddEpisode(id int, episode *model.Episode) error
 	SetEpisodePlayed(id int, guid string, played bool) error
 }
 
@@ -26,10 +25,6 @@ func (repo DefaultRepository) Add(feed *model.Feed) error {
 }
 
 func (repo DefaultRepository) Update(id int, feed *model.Feed) error {
-	return nil
-}
-
-func (repo DefaultRepository) AddEpisode(id int, episode *model.Episode) error {
 	return nil
 }
 
