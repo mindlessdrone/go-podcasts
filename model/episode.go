@@ -13,6 +13,14 @@ type Episode struct {
 	url         string
 }
 
+func NewEpisode(title, description string, published time.Time, guid string,
+	length int, url string) Episode {
+
+	return Episode{
+		title, description, published, guid, false, length, url,
+	}
+}
+
 func (episode Episode) Title() string {
 	return episode.title
 }
