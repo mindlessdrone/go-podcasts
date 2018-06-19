@@ -5,19 +5,19 @@ import (
 	"net/http"
 )
 
-type GoFeedRetriever struct{}
+type HTTPFeedRetriever struct{}
 
-func (GoFeedRetriever) GrabData(url string) (*string, error) {
+func (HTTPFeedRetriever) GrabData(url string) (string, error) {
 	resp, err := http.Get(url)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	defer resp.Body.Close()
 
 	data, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	feedData := string(data)
-	return &feedData, nil
+	return feedData, nil
 }

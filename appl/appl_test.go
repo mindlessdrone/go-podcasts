@@ -15,6 +15,7 @@ func (FeedRetrieverStub) GrabData(url string) (string, error) {
 	testTable := make(map[string]string)
 
 	testTable["http://thisoneisinvalid.org/rss"] = "test_data/invalid.txt"
+	testTable["http://thisoneisactuallyvalid.org/rss"] = "test_data/npr_feed.xml"
 
 	fileName, present := testTable[url]
 	if present {
@@ -62,6 +63,20 @@ func TestAddFeed(t *testing.T) {
 		err := feedServices.AddFeed("http://thisoneisinvalid.org/rss")
 		if err == nil {
 			t.Error("FeedServices did not return an error on invalid feed")
+		}
+	})
+
+	t.Run("FeedSaveSuccessful", func(t *testing.T) {
+		repoMock := &SuccessSaveMock{}
+		feedServices := NewFeedServices(&FeedRetrieverStub{}, repoMock)
+
+		err := feedServices.AddFeed("http://thisoneisactuallyvalid.org/rss")
+		if err != nil {
+			t.Error("FeedServices should not return an error from a valid RSS feed")
+		}
+
+		if repoMock.Called("Add") != 1 {
+			t.Error("The Add function was not called the proper amount of times.")
 		}
 	})
 }
