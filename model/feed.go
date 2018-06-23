@@ -54,6 +54,10 @@ func (feed Feed) GetUpdated() *time.Time {
 	return &feed.updated
 }
 
+func (feed Feed) GetFeedUpdated() *time.Time {
+	return &feed.feedUpdated
+}
+
 func (feed *Feed) SetUpdated(newTime time.Time) {
 	feed.updated = newTime
 }
