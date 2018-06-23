@@ -44,7 +44,10 @@ func (feedServices FeedServices) AddFeed(url string) error {
 
 	episodes := itemsToEpisodes(feed.Items)
 	newFeed.AddEpisodes(episodes...)
-	feedServices.feedRepository.Add(&newFeed)
+	err = feedServices.feedRepository.Add(&newFeed)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
