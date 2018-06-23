@@ -4,18 +4,25 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/mindlessdrone/go-podcasts/appl"
 	"github.com/mindlessdrone/go-podcasts/ui/commands"
 	"github.com/urfave/cli"
 )
 
 func main() {
 	app := cli.NewApp()
-
-	app.Commands = []cli.Command{
-		*commands.AddCommand(),
+	sqlRepository, err := appl.NewSQLRepository("podcasts.db")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 	}
 
-	err := app.Run(os.Args)
+	feedServices := appl.NewFeedServices(appl.HTTPFeedRetriever{}, sqlRepository)
+
+	app.Commands = []cli.Command{
+		*commands.AddCommand(&feedServices),
+	}
+
+	err = app.Run(os.Args)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
