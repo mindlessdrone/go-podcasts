@@ -96,19 +96,19 @@ func (repo SQLRepository) Add(feed *model.Feed) error {
 
 	for i, episode := range feed.Episodes {
 		if i != 0 {
-			episode.SetPlayed()
+			episode.Played = true
 		}
-		publishedString := episode.Published().Format("2006-01-02 15:04")
+		publishedString := episode.Published.Format("2006-01-02 15:04")
 		feedID, _ := insertResult.LastInsertId()
 		_, err = episodeStmt.Exec(
 			feedID,
-			episode.Title(),
-			episode.Description(),
+			episode.Title,
+			episode.Description,
 			publishedString,
-			episode.GUID(),
-			episode.Played(),
-			episode.Length(),
-			episode.URL())
+			episode.GUID,
+			episode.Played,
+			episode.Length,
+			episode.URL)
 		if err != nil {
 			return err
 		}
