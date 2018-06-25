@@ -11,7 +11,7 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	sqlRepository, err := appl.NewSQLRepository("podcasts.db")
+	sqlRepository, err := appl.NewSimpleSQLRepository("podcasts-experimental.db")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
@@ -20,6 +20,7 @@ func main() {
 
 	app.Commands = []cli.Command{
 		*commands.AddCommand(&feedServices),
+		*commands.ListCommand(&feedServices),
 	}
 
 	err = app.Run(os.Args)
