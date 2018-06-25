@@ -11,7 +11,7 @@ import (
 
 func main() {
 	app := cli.NewApp()
-	sqlRepository, err := appl.NewSimpleSQLRepository("podcasts-experimental.db")
+	sqlRepository, err := appl.NewSimpleSQLRepository("podcasts.db")
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 	}
