@@ -60,8 +60,8 @@ func NewSQLRepository(dbName string) (*SQLRepository, error) {
 
 func (repo SQLRepository) Add(feed *model.Feed) error {
 
-	updatedString := feed.GetUpdated().Format("2006-01-02 15:04")
-	feedUpdatedString := feed.GetFeedUpdated().Format("2006-01-02 15:04")
+	updatedString := feed.Updated.Format("2006-01-02 15:04")
+	feedUpdatedString := feed.FeedUpdated.Format("2006-01-02 15:04")
 	insertStmt, err := repo.db.Prepare(`
 		INSERT INTO feeds(id, title, description, icon_url, url, author, updated, feedUpdated)
 		SELECT null, ?, ?, ?, ?, ?, datetime(?), datetime(?)
@@ -71,13 +71,13 @@ func (repo SQLRepository) Add(feed *model.Feed) error {
 	}
 
 	insertResult, err := insertStmt.Exec(
-		feed.Title(),
-		feed.Description(),
-		feed.Icon(),
-		feed.URL(),
-		feed.Author(),
+		feed.Title,
+		feed.Description,
+		feed.IconURL,
+		feed.FeedURL,
+		feed.Author,
 		updatedString,
-		feedUpdatedString, feed.URL())
+		feedUpdatedString, feed.FeedURL)
 
 	if err != nil {
 		return err
@@ -94,7 +94,7 @@ func (repo SQLRepository) Add(feed *model.Feed) error {
 		return err
 	}
 
-	for i, episode := range feed.Episodes() {
+	for i, episode := range feed.Episodes {
 		if i != 0 {
 			episode.SetPlayed()
 		}
@@ -115,4 +115,12 @@ func (repo SQLRepository) Add(feed *model.Feed) error {
 	}
 
 	return nil
+}
+
+func (repo SQLRepository) Query(id int) (*model.Feed, error) {
+	return nil, nil
+}
+
+func (repo SQLRepository) QueryAll() ([]*model.Feed, error) {
+	return nil, errors.New("Not implemented")
 }

@@ -6,13 +6,13 @@ import (
 
 // Feed domain object
 type Feed struct {
-	title                string
-	description          string
-	iconURL              string
-	feedURL              string
-	author               string
-	updated, feedUpdated time.Time
-	episodes             []Episode
+	Title                string
+	Description          string
+	IconURL              string
+	FeedURL              string
+	Author               string
+	Updated, FeedUpdated time.Time
+	Episodes             []Episode
 }
 
 func NewFeed(title, description, iconURL, feedURL, author string, feedUpdated time.Time) Feed {
@@ -28,7 +28,7 @@ func NewFeed(title, description, iconURL, feedURL, author string, feedUpdated ti
 	}
 }
 
-// Title: returns title of feed
+/*// Title: returns title of feed
 func (feed Feed) Title() string {
 	return feed.title
 }
@@ -69,15 +69,15 @@ func (feed *Feed) SetFeedUpdated(newTime time.Time) {
 func (feed Feed) Episodes() []Episode {
 	return feed.episodes
 }
-
+*/
 func (feed *Feed) AddEpisodes(episodes ...Episode) {
-	feed.episodes = append(episodes, feed.episodes...)
+	feed.Episodes = append(episodes, feed.Episodes...)
 }
 
 func (feed Feed) UnplayedEpisodes() []Episode {
 	episodes := make([]Episode, 0)
-	for _, episode := range feed.episodes {
-		if !episode.played {
+	for _, episode := range feed.Episodes {
+		if !episode.Played {
 			episodes = append(episodes, episode)
 		}
 	}

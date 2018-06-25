@@ -51,6 +51,14 @@ func (feedServices FeedServices) AddFeed(url string) error {
 	return nil
 }
 
+func (feedServices FeedServices) AllFeeds() ([]*model.Feed, error) {
+	feeds, err := feedServices.feedRepository.QueryAll()
+	if err != nil {
+		return nil, err
+	}
+	return feeds, nil
+}
+
 func itemsToEpisodes(items []*gofeed.Item) []model.Episode {
 	episodes := make([]model.Episode, 0)
 
