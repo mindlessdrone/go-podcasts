@@ -24,6 +24,7 @@ func NewSimpleSQLRepository(dbName string) (*SimpleSQLRepository, error) {
 
 	_, err = db.Exec(`
 			CREATE TABLE IF NOT EXISTS feeds(
+				id			INTEGER PRIMARY KEY AUTOINCREMENT,
 				url 		TEXT NOT NULL,
 				feed_data 	BLOB NOT NULL
 			);`)
@@ -36,8 +37,8 @@ func NewSimpleSQLRepository(dbName string) (*SimpleSQLRepository, error) {
 
 func (repo SimpleSQLRepository) Add(feed *model.Feed) error {
 	insert, err := repo.db.Prepare(`
-		INSERT INTO feeds(url, feed_data)
-		SELECT ?, ?
+		INSERT INTO feeds(id, url, feed_data)
+		SELECT null, ?, ?
 		WHERE NOT EXISTS(SELECT * FROM feeds WHERE url = ?);`)
 
 	if err != nil {
@@ -60,4 +61,31 @@ func (repo SimpleSQLRepository) Add(feed *model.Feed) error {
 	}
 
 	return nil
+}
+
+func (repo SimpleSQLRepository) QueryAll() ([]*model.Feed, error) {
+	feeds := make([]*model.Feed, 0)
+
+	rows, err := repo.db.Query("SELECT * FROM feeds;")
+	if err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		var feedData []byte
+		var feed model.Feed
+
+		err = rows.Scan(&feedData)
+		if err != nil {
+			return nil, err
+		}
+
+		err = json.Unmarshal(feedData, &feed)
+		if err != nil {
+			return nil, err
+		}
+
+		feeds = append(feeds, &feed)
+	}
+	return feeds, nil
 }
