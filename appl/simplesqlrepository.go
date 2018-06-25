@@ -66,7 +66,7 @@ func (repo SimpleSQLRepository) Add(feed *model.Feed) error {
 func (repo SimpleSQLRepository) QueryAll() ([]*model.Feed, error) {
 	feeds := make([]*model.Feed, 0)
 
-	rows, err := repo.db.Query("SELECT * FROM feeds;")
+	rows, err := repo.db.Query("SELECT feed_data FROM feeds;")
 	if err != nil {
 		return nil, err
 	}
