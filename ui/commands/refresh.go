@@ -6,5 +6,11 @@ import (
 )
 
 func RefreshCommand(feedServices *appl.FeedServices) *cli.Command {
-	return nil
+	return &cli.Command{
+		Name:        "refresh",
+		Description: "refresh podcasts and grab new episodes",
+		Action: func(c *cli.Context) error {
+			return nil
+		},
+	}
 }
