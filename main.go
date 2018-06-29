@@ -21,6 +21,7 @@ func main() {
 	app.Commands = []cli.Command{
 		*commands.AddCommand(&feedServices),
 		*commands.ListCommand(&feedServices),
+		*commands.RefreshCommand(&feedServices),
 	}
 
 	err = app.Run(os.Args)

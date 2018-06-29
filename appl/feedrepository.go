@@ -8,6 +8,7 @@ type FeedRepository interface {
 	Add(feed *model.Feed) error
 	Update(id int, feed *model.Feed) error
 	SetEpisodePlayed(id int, guid string, played bool) error
+	ItemIDs() ([]int, error)
 }
 
 type DefaultRepository struct{}

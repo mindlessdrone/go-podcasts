@@ -89,3 +89,23 @@ func (repo SimpleSQLRepository) QueryAll() ([]*model.Feed, error) {
 	}
 	return feeds, nil
 }
+
+func (repo SimpleSQLRepository) ItemIDs() ([]int, error) {
+	ids := make([]int, 0)
+
+	rows, err := repo.db.Query("SELECT id FROM feeds;")
+	if err != nil {
+		return nil, err
+	}
+
+	// gather all ids into slice
+	var id int
+	for rows.Next() {
+		if err = rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		ids = append(ids, id)
+	}
+
+	return ids, nil
+}

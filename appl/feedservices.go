@@ -59,6 +59,18 @@ func (feedServices FeedServices) AllFeeds() ([]*model.Feed, error) {
 	return feeds, nil
 }
 
+func (feedServices FeedServices) AllFeedIDS() ([]int, error) {
+	ids, err := feedServices.feedRepository.ItemIDs()
+	if err != nil {
+		return nil, err
+	}
+	return ids, nil
+}
+
+func (feedServices FeedServices) RefreshPodcast(id int) error {
+	return nil
+}
+
 func itemsToEpisodes(items []*gofeed.Item) []model.Episode {
 	episodes := make([]model.Episode, 0)
 
