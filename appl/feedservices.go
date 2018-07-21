@@ -68,7 +68,47 @@ func (feedServices FeedServices) AllFeedIDS() ([]int, error) {
 }
 
 func (feedServices FeedServices) RefreshPodcast(id int) error {
+	feed, err := feedServices.feedRepository.Query(id)
+	if err != nil {
+		return err
+	}
+
+	// grab feed data
+	feedData, err := feedServices.feedRetriever.GrabData(feed.FeedURL)
+	if err != nil {
+		return err
+	}
+
+	feedParser := gofeed.NewParser()
+
+	parsedFeed, err := feedParser.ParseString(feedData)
+	if err != nil {
+		return nil
+	}
+
+	episodes := itemsToEpisodes(parsedFeed.Items)
+	// add new episodes to feed
+	// TODO: make this more efficient
+	for _, episode := range episodes {
+		if !contains(episodes, episode) {
+			feed.AddEpisodes(episode)
+		}
+	}
+
+	// save the newly updated feed!
+	if err = feedServices.feedRepository.Update(id, feed); err != nil {
+		return err
+	}
 	return nil
+}
+
+func contains(episodes []model.Episode, episode model.Episode) bool {
+	for _, ep := range episodes {
+		if ep.GUID == episode.GUID {
+			return true
+		}
+	}
+	return false
 }
 
 func itemsToEpisodes(items []*gofeed.Item) []model.Episode {
