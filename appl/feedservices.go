@@ -86,17 +86,8 @@ func (feedServices FeedServices) RefreshPodcast(id int) error {
 		return nil
 	}
 
-	episodes := itemsToEpisodes(parsedFeed.Items)
-	// add new episodes to feed
-	// TODO: make this more efficient
-	for _, episode := range episodes {
-		if !contains(episodes, episode) {
-			feed.AddEpisodes(episode)
-		}
-	}
-
-	// save the newly updated feed!
-	if err = feedServices.feedRepository.Update(id, feed); err != nil {
+	newFeed := gofeedToFeed(parsedFeed)
+	if err = feedServices.feedRepository.Update(id, newFeed); err != nil {
 		return err
 	}
 	return nil
@@ -127,4 +118,20 @@ func itemsToEpisodes(items []*gofeed.Item) []model.Episode {
 	}
 
 	return episodes
+}
+
+func gofeedToFeed(feed *gofeed.Feed) *model.Feed {
+	newFeed := model.NewFeed(
+		feed.Title,
+		feed.Description,
+		feed.Image.URL,
+		feed.Link,
+		feed.Author.Name,
+		*feed.UpdatedParsed,
+	)
+
+	episodes := itemsToEpisodes(feed.Items)
+	newFeed.AddEpisodes(episodes...)
+
+	return &newFeed
 }
